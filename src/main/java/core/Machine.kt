@@ -94,7 +94,22 @@ class Machine(programsrc :String, inputsrc : String) {
         }
     }
 
+    fun callHelp(){
+        val helptxt = "TuringMachine path/to/programfile path/to/input/file\nIf input file equals" +
+                " '-', then read input interactive from console"
+        println(helptxt)
+    }
+
+    fun verifyArgs(args : Array<String>){
+        if(args.size < 2){
+            println("Please provide minimum arguments")
+            callHelp()
+        }
+        System.exit(0)
+    }
+
     fun main(args :Array<String>){
+        verifyArgs(args)
         val machine = Machine(args[0], args[1])
         machine.run()
     }
