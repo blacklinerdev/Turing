@@ -1,21 +1,37 @@
 package core
 
+import error.TuringSyntaxException
+import java.io.File
 
-class Machine {
+
+class Machine(programsrc :String, inputsrc : String) {
 
     var state  = "0"
     var step = 0
     var pos = 0
 
-    var input = ""
-    var program = ""
+    var input :String
+    var program :Program
 
-    private fun loadInput() : String{
-        return "1001001"
+    init {
+        input = loadInput(inputsrc)
+        program = loadProgram(programsrc)
     }
 
-    private fun loadProgram(){
+    private fun loadInput(src : String) : String{
+        val input : String
+        if(src == "-"){
+            println("Enter input:")
+            input = readlnOrNull().toString()
+        }else{
+            val file = File(src)
+            input = file.readText()
+        }
+        return input
+    }
 
+    private fun loadProgram(src : String) :Program{
+        return Program.load(src)
     }
 
     private fun terminate(){
@@ -55,7 +71,7 @@ class Machine {
 
     private fun step (){
         //check termination
-        if(state.startWith("halt")){
+        if(state.startsWith("halt")){
             terminate()
         }
         //read symbol
@@ -76,5 +92,10 @@ class Machine {
         while(!state.startsWith("halt")){
             step()
         }
+    }
+
+    fun main(args :Array<String>){
+        val machine = Machine(args[0], args[1])
+        machine.run()
     }
 }
